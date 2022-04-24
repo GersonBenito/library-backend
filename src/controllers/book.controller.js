@@ -113,11 +113,30 @@ const searchBook = async (req, res = response) => {
     }
 }
 
+const getBooksByGenre = async(req, res = response) =>{
+    try {
+        const idGenre = req.params.id;
+        const books = await bookModel.getByGenre(idGenre);
+        return res.status(200).json({
+            status: 200,
+            data: books,
+            message: 'get books success'
+        });
+        
+    } catch (error) {
+        return res.status(400).json({
+            status: 400,
+            message: 'error to get book'
+        });
+    }
+}
+
 module.exports = {
     addBook,
     getAllBooks,
     getBookById,
     updateBook,
     deleteBook,
-    searchBook
+    searchBook,
+    getBooksByGenre
 }

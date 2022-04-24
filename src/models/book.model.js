@@ -10,12 +10,23 @@ const save = async(book) =>{
 }
 
 const getAll = async() =>{
-    const results = await connection.query('SELECT * FROM book');
+    const results = await connection.query(
+        `SELECT * FROM book b
+        INNER JOIN genre ge
+        ON b.id_genre = ge.id_genre`
+    );
     return results.rows;
 }
 
 const getById = async(idBook) =>{
-    const result = await connection.query('SELECT * FROM book WHERE id_book = $1', [idBook]);
+    const result = await connection.query(
+        `
+            SELECT * FROM book b
+            INNER JOIN genre ge
+            ON b.id_genre = ge.id_genre
+            WHERE b.id_book = $1
+        `,[idBook]
+    );
     return result.rows[0];
 }
 
@@ -38,11 +49,24 @@ const search = async (search) =>{
     return results.rows;
 }
 
+const getByGenre = async(id_genre) =>{
+    const result = await connection.query(
+        `
+            SELECT * FROM book b
+            INNER JOIN genre ge
+            ON b.id_genre = ge.id_genre
+            WHERE b.id_genre = $1
+        `,[id_genre]
+    );
+    return result.rows;
+}
+
 module.exports = {
     save,
     getAll,
     getById,
     update,
     remove,
-    search
+    search,
+    getByGenre
 }
